@@ -58,13 +58,14 @@ def extract_previous_month_data(invoice_file, account_file, export_file, num_mon
     aria = accounts.merge(payment_months_pivot, left_on='Account', right_index=True)
     aria = aria.apply(provide_display_name, axis='columns')
     aria['Summary-Last_' + str(num_months) + '_months'] = aria[list(invoices['PaymentMonth'].unique())].sum(axis='columns')
+    aria['Average'] = aria[list(invoices['PaymentMonth'].unique())].mean(axis='columns')
 
     # Provide cleaned and sorted data for export
     export = aria.sort_values('Summary-Last_' + str(num_months) + '_months', ascending=False)
     export = export.iloc[:max_records]
     export = export[
         ['DisplayName', 'Email', 'Country', 'PlanName', 'Account'] + list(invoices['PaymentMonth'].unique()) + [
-            'Summary-Last_' + str(num_months) + '_months']]
+            'Summary-Last_' + str(num_months) + '_months', 'Average']]
     export.to_csv(export_file, index=False)
 
 
