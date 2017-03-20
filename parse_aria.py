@@ -2,7 +2,9 @@ import requests
 import json
 import pandas as pd
 import datetime as dt
+import config
 from dateutil.relativedelta import relativedelta
+
 
 ARIA_ACCOUNTS = {
     10120066: 'Free',
@@ -35,7 +37,7 @@ def provide_display_name(df, *args, **kwargs):
     return df
 
 
-def extract_previous_month_data(invoice_file, account_file, export_file, num_months, max_records):
+def extract_previous_month_data(invoice_file, account_file, export_file, num_months, max_records, sort='summary'):
     invoices = pd.read_csv(invoice_file)
     accounts = pd.read_csv(account_file)
 
@@ -61,7 +63,10 @@ def extract_previous_month_data(invoice_file, account_file, export_file, num_mon
     aria['Average'] = aria[list(invoices['PaymentMonth'].unique())].mean(axis='columns')
 
     # Provide cleaned and sorted data for export
-    export = aria.sort_values('Summary-Last_' + str(num_months) + '_months', ascending=False)
+    if sort == 'average':
+        export = aria.sort_values('Average', ascending=False)
+    elif sort == 'summary':
+        export = aria.sort_values('Summary-Last_' + str(num_months) + '_months', ascending=False)
     export = export.iloc[:max_records]
     export = export[
         ['DisplayName', 'Email', 'Country', 'PlanName', 'Account'] + list(invoices['PaymentMonth'].unique()) + [
@@ -70,4 +75,5 @@ def extract_previous_month_data(invoice_file, account_file, export_file, num_mon
 
 
 if __name__ == '__main__':
-    extract_previous_month_data('invoices.csv', 'accounts.csv', 'export.csv', 3, 500)
+    extract_previous_month_data('all-payment-detail.csv', 'account-details.csv', 'export.csv',
+                                config.PAST_MONTHS, config.TOTAL_RECORDS, config.SORT)

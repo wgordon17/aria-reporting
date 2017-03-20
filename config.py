@@ -1,0 +1,3 @@
+PAST_MONTHS = 5
+TOTAL_RECORDS = 500
+SORT = 'summary'
