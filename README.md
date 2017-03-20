@@ -20,8 +20,8 @@ Modify the values in `config.py`
 on `SORT` value, the first `TOTAL_RECORDS` values are then kept and all
 others removed
 + SORT: Specify which column to sort on
-    + `average` - The average amount based on all month columns
-    + `summary` (default) - The sum amount based on all month columns
+    + `average` (default) - The average amount based on all month columns
+    + `summary` - The sum amount based on all month columns
 
 Provide 2 Aria exports. Based on internal report names, we've used
 *account-details.csv* and *all-payment-detail.csv*. These should be

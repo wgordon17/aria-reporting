@@ -37,7 +37,7 @@ def provide_display_name(df, *args, **kwargs):
     return df
 
 
-def extract_previous_month_data(invoice_file, account_file, export_file, num_months, max_records, sort='summary'):
+def extract_previous_month_data(invoice_file, account_file, export_file, num_months, max_records, sort='average'):
     invoices = pd.read_csv(invoice_file)
     accounts = pd.read_csv(account_file)
 
@@ -69,7 +69,7 @@ def extract_previous_month_data(invoice_file, account_file, export_file, num_mon
         export = aria.sort_values('Summary-Last_' + str(num_months) + '_months', ascending=False)
     export = export.iloc[:max_records]
     export = export[
-        ['DisplayName', 'Email', 'Country', 'PlanName', 'Account'] + list(invoices['PaymentMonth'].unique()) + [
+        ['DisplayName', 'First Name', 'Last Name', 'Email', 'Country', 'PlanName', 'Account'] + list(invoices['PaymentMonth'].unique()) + [
             'Summary-Last_' + str(num_months) + '_months', 'Average']]
     export.to_csv(export_file, index=False)
 
