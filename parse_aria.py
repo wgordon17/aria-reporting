@@ -27,6 +27,14 @@ def convert_currency(df, *args, **kwargs):
     return df
 
 
+def convert_country_to_region(df, *args, **kwargs):
+    if df['Country'] in ['US', 'CA']:
+        df['Region'] = 'NA'
+    else:
+        df['Region'] = 'EU'
+    return df
+
+
 def provide_plan_name(df, *args, **kwargs):
     df['PlanName'] = ARIA_ACCOUNTS.get(df['Plan No'], df['Plan No'])
     return df
@@ -55,6 +63,7 @@ def extract_previous_month_data(invoice_file, account_file, export_file, num_mon
 
     # Clean up account data before merge
     accounts = accounts.apply(provide_plan_name, axis='columns')  # Translate plan # into plan name
+    accounts = accounts.apply(convert_country_to_region, axis='columns')  # Apply region code based on country ('US' & 'CA' -> 'NA)
 
     # Merge accounts with their invoices
     aria = accounts.merge(payment_months_pivot, left_on='Account', right_index=True)
@@ -69,7 +78,7 @@ def extract_previous_month_data(invoice_file, account_file, export_file, num_mon
         export = aria.sort_values('Summary-Last_' + str(num_months) + '_months', ascending=False)
     export = export.iloc[:max_records]
     export = export[
-        ['DisplayName', 'First Name', 'Last Name', 'Email', 'Country', 'PlanName', 'Account'] + list(invoices['PaymentMonth'].unique()) + [
+        ['DisplayName', 'First Name', 'Last Name', 'Email', 'Country', 'Region', 'PlanName', 'Account'] + list(invoices['PaymentMonth'].unique()) + [
             'Summary-Last_' + str(num_months) + '_months', 'Average']]
     export.to_csv(export_file, index=False)
 

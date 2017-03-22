@@ -91,8 +91,8 @@ ENV/
 # Rope project settings
 .ropeproject
 
-/invoices.csv
-/accounts.csv
+/all-payment-detail.csv
+/account-details.csv
 /export.csv
 .idea/
 /up-thru-*
