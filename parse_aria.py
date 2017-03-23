@@ -29,9 +29,9 @@ def convert_currency(df, *args, **kwargs):
 
 def convert_country_to_region(df, *args, **kwargs):
     if df['Country'] in ['US', 'CA']:
-        df['Region'] = 'NA'
+        df['Region'] = 'NASA'
     else:
-        df['Region'] = 'EU'
+        df['Region'] = 'EMEA'
     return df
 
 
